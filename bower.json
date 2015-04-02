@@ -1,0 +1,16 @@
+{
+  "name": "dffbuilder",
+  "version": "0.0.0",
+  "homepage": "https://github.com/yemaw/dffbuilder",
+  "authors": [
+    "yemaw <yemaw.online@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
