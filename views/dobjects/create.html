@@ -1,0 +1,38 @@
+<div class="container">
+<div ng-include="'views/blocks/nav_top.html'"></div>
+
+<div ng-controller="DObjectsCreateController" class="paper">
+	<form ng-submit="saveObject()" class="full">
+		<div class="command-bar clearfix">
+			<div class="pull-left">
+				<a href="#{{controller}}" class="btn btn-small btn-default">back</a>
+			</div>
+			<div class="pull-right">
+				<input type="submit" value="Save" class="btn btn-small btn-primary" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-2"><label>Fullname</label></div>
+			<div class="col-md-10"><input type="textbox" required class="form-control" ng-model="fields.name" /></div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-2"><label>Image</label></div>
+			<div class="col-md-10"><input type="file" class="form-control" id="cover_photos" multiple accept="image/*" /></div>
+		</div>
+		
+	
+		<div class="row" ng-repeat="field in form_fields">
+			<div class="col-md-2"><label>{{field.caption}}</label></div>
+			<div class="col-md-10" ng-switch on="field.type">
+				<select ng-switch-when="select" ng-options="option for option in field.options" ng-model="fields[field.column]" class="form-control"></select>
+				<div ng-switch-when="radio" ng-repeat="option in field.options"><input type="radio" ng-model="fields[field.column]" name="{{field.column}}" value="{{option}}">{{option}}</div>
+				<input ng-switch-when="date" ui-date="{changeYear: true, changeMonth: true, yearRange: '1950:-0'}"  ng-model="fields[field.column]" class="form-control" /><!-- ui-date-format="DD, d MM, yy" -->
+				<input ng-switch-default type="textbox" ng-model="fields[field.column]" class="form-control" />
+			</div>
+		</div>
+		
+	</form>
+</div>
+</div>

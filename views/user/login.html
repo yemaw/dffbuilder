@@ -1,20 +1,26 @@
-<link href="https://bootswatch.com/journal/bootstrap.min.css" type="text/css" rel="stylesheet"></style>
+<!--<link href="https://bootswatch.com/journal/bootstrap.min.css" type="text/css" rel="stylesheet">-->
 
 <div ng-controller="UserLoginController" id="user-login" >
 	<table class="full">
 		<tr>
 			<td>
 			<div class="pull-right" style="margin-right:50px;">
-				<div id="login-box">
-					<input type="text" id="username" class="form-control" placeholder="email" />
+				<form id="login-box" ng-submit="login()">
+					<input type="text" id="user_id" ng-model="user_id" class="form-control" placeholder="email" />
 					<br />
-					<input type="password" id="password" class="form-control" placeholder="password" />
+					<input type="password" id="password" ng-model="password" class="form-control" placeholder="password" />
 					<br />
-					<button class="btn btn-small btn-primary pull-right">Login</button>
+					<input type="submit" value="Login" class="btn btn-small btn-info pull-right" />
 					<div style="clear:both;"></div>
-				</div>
+				</form>
 			</div>
 			</td>
 		</tr>
-	</div>
+	</table>
 </div>
+
+<script>
+	(function(){
+		document.getElementById("user_id").focus();
+	})(document);
+</script>
