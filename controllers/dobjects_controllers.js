@@ -35,7 +35,9 @@ function($location, $routeParams, $scope, PD){
 	
 }]);
 
-App.controller('DObjectsIndexController',['$routeParams', '$scope', 'ParseDataService', function($routeParams, $scope, PD){
+App.controller('DObjectsIndexController',
+['$routeParams', '$scope', 'ParseDataService', 'flash',
+function($routeParams, $scope, PD, flash){
 	
 	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
 	
@@ -65,7 +67,9 @@ App.controller('DObjectsIndexController',['$routeParams', '$scope', 'ParseDataSe
 }]);
 
 
-App.controller('DObjectsCreateController', ['$routeParams', '$location', '$scope', 'ParseDataService', function($routeParams, $location, $scope, PD){
+App.controller('DObjectsCreateController', 
+['$routeParams', '$location', '$scope', 'ParseDataService', 'flash',
+function($routeParams, $location, $scope, PD, flash){
 	
 	document.title = 'Create';
 	
@@ -98,7 +102,7 @@ App.controller('DObjectsCreateController', ['$routeParams', '$location', '$scope
 					PD.saveFile(name, file, {
 						onSuccess:function(objSaved){
 							var f = {FileId:objSaved.id,url:objSaved.get('file').url()};//flattern the parse file object
-							_files.push(f);console.log(f);
+							_files.push(f);
 							callback();
 						},
 						onError:function(error){
@@ -109,7 +113,7 @@ App.controller('DObjectsCreateController', ['$routeParams', '$location', '$scope
 					if(error){
 						alert('a file upload error');
 						console.log(error);
-					}console.log(_files);
+					}
 					$scope.fields[_field] = _files;
 					callback(null);
 				});	
@@ -124,8 +128,8 @@ App.controller('DObjectsCreateController', ['$routeParams', '$location', '$scope
 			//$scope.fields's file field are updated with parse file object's data. now ready to save to parse
 			PD.saveObject($scope.fields, $scope.collection, {
 				onSuccess:function(object){
-					alert('success');
 					$scope.$apply($location.url($scope.collection+'/show/'+object.id));
+					flash('alert alert-success', 'Successfully saved.');
 				},
 				onError:function(){
 					alert('error');
@@ -136,7 +140,9 @@ App.controller('DObjectsCreateController', ['$routeParams', '$location', '$scope
 	}
 }]);
 
-App.controller('DObjectsEditController',['$routeParams', '$scope', 'ParseDataService', function($routeParams, $scope, PD){
+App.controller('DObjectsEditController',
+['$routeParams', '$scope', 'ParseDataService', 'flash', 
+function($routeParams, $scope, PD, flash){
 	
 	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
 	
@@ -165,7 +171,9 @@ App.controller('DObjectsEditController',['$routeParams', '$scope', 'ParseDataSer
 }]);
 
 
-App.controller('DObjectsShowController',['$routeParams', '$scope', 'ParseDataService', function($routeParams, $scope, PD){
+App.controller('DObjectsShowController',
+['$routeParams', '$scope', 'ParseDataService', 'flash',
+function($routeParams, $scope, PD, flash){
 	
 	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
 	

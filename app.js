@@ -9,7 +9,7 @@ var Helper = {
 }
 
 
-var App = angular.module('app', ['ngRoute','ui.date']);
+var App = angular.module('app', ['ngRoute','ui.date','flash']);
 
 App.config(['$routeProvider',
     function($routeProvider) {
@@ -145,7 +145,7 @@ App.service('ParseDataService',[function(){
 }]);
 
 
-Parse.initialize("JA0k6WJsInueLYmBorsDWBN0W5F7KC4jv3E5pPUG", "5RNXhfQFGlERuE0ig4G5cvWgkRA5DGlAjVpItil0"); 
+Parse.initialize("", ""); 
 
 
 var configs = {
