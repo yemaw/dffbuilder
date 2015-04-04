@@ -1,16 +1,19 @@
 <!--<link href="https://bootswatch.com/journal/bootstrap.min.css" type="text/css" rel="stylesheet">-->
 
-<div ng-controller="UserLoginController" id="user-login" >
+<div ng-controller="UserLoginController" id="user-login" ng-init="logging_in=false;" >
 	<table class="full">
 		<tr>
 			<td>
 			<div class="pull-right" style="margin-right:50px;">
 				<form id="login-box" ng-submit="login()">
-					<input type="text" id="user_id" ng-model="user_id" class="form-control" placeholder="email" />
+					<div ng-show="flash_messages.length">
+						<div ng-repeat="msg in flash_messages" class="alert alert-{{msg.type}}">{{msg.message}}</div>
+					</div>
+					<input type="text" id="user_id" ng-disabled="logging_in" ng-model="user_id" required class="form-control" placeholder="Username" />
 					<br />
-					<input type="password" id="password" ng-model="password" class="form-control" placeholder="password" />
+					<input type="password" id="password" ng-disabled="logging_in" ng-model="password" required class="form-control" placeholder="Password" />
 					<br />
-					<input type="submit" value="Login" class="btn btn-small btn-info pull-right" />
+					<input type="submit" value="Login" ng-disabled="logging_in" class="btn btn-small btn-info pull-right" />
 					<div style="clear:both;"></div>
 				</form>
 			</div>

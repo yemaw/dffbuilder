@@ -1,0 +1,23 @@
+<div ng-controller="DObjectsRootController" id="dobjects" class="container">
+
+<ul class="nav nav-tabs">
+  	<li ng-repeat="form in forms" ng-class="collection === form.collection ? 'active' : ''">
+  		<a ng-href="#{{form.collection}}" data-toggle="tab" aria-expanded="{{collection === form.collection ? true : false}}">{{form.name}}</a>
+  	</li>
+  
+  	<li class="dropdown pull-right">
+    	<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">{{username}} <span class="caret"></span></a>
+    	<ul class="dropdown-menu">
+	        <li><a href="#configs" data-toggle="tab">Form Settings</a></li>
+	      	<li class="divider"></li>
+	      	<li><a href="#user/edit" data-toggle="tab">Edit Account</a></li>
+	        <li><a ng-click="logout()" data-toggle="tab">Logout</a></li>
+    	</ul>
+  	</li>
+</ul>
+<div class="tab-content">
+  	<div class="tab-pane fade active in">
+  		<div ng-include="getActionTemplateUrl()"></div>
+	</div>
+</div>
+</div>

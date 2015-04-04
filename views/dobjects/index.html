@@ -1,39 +1,36 @@
-<div class="container">
-<div ng-include="'views/blocks/nav_top.html'"></div>
 
-<div ng-controller="DObjectsIndexController" class="paper">
+<div ng-controller="DObjectsIndexController">
 	<div class="command-bar clearfix">
 		<div class="pull-left">
 		</div>
 		<div class="pull-right">
-			<a href="#resumes/create" class="btn btn-small btn-primary">Create</a>
+			<a href="#{{collection}}/create" class="btn btn-small btn-primary">Create</a>
 		</div>
 	</div>
 	<table class="table" style="margin-top:20px;">
 		<tr>
 			<th>Name</th>
-			<th>Father's Name</th>
-			<th>Mother's Name</th>
+			<th ng-repeat="field in fields | filter:{show_in_index:true}">{{field.label}}</th>
 			<th></th>
-			
 		</tr>
 		<tr>
-			<td><input type="text" class="form-control" ng-keyup="filterData()" ng-model="filters.name" /></td>
-			<td><input type="text" class="form-control" ng-keyup="filterData()" ng-model="filters.father_name"/></td>
-			<td><input type="text" class="form-control" ng-keyup="filterData()" ng-model="filters.mother_name"/></td>
-			<td>
-				
+			<td><input type="text" class="form-control" ng-change="filterData()" ng-model="filters.name" /></td>
+			<td ng-repeat="field in fields | filter:{show_in_index:true}">
+				<input type="text" class="form-control" ng-change="filterData()" ng-model="filters[field.column]"/>
 			</td>
+			<td></td>
 		</tr>
 	    <tr ng-repeat="object in dobjects" ng-cloak="resumes.length > 0">
 	    	<td>{{object.get('name')}}</td>
-	    	<td>{{object.get('father_name')}}</td>
-	    	<td>{{object.get('mother_name')}}</td>
-	    	<td><a href="#{{controller}}/show/{{object.id}}"><i class="fa fa-arrow-right"></i></a></td>
+	    	<td ng-repeat="field in fields | filter:{show_in_index:true}">
+	    		{{object.get(field.column)}}
+	    	</td>
+	    	
+	    	<td><a href="#{{collection}}/show/{{object.id}}"><i class="fa fa-arrow-right"></i></a></td>
 	    </tr>
 	    <tr ng-show="resumes.length < 1">
 	    	<td colspan="5" style="text-align:center;padding:100px 0px;">No records.</td>
 	    </tr>
 	</table>
 </div>
-</div>
+

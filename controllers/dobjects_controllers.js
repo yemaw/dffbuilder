@@ -1,8 +1,49 @@
+App.controller('DObjectsRootController',['$location', '$routeParams','$scope', 'ParseDataService', 
+function($location, $routeParams, $scope, PD){
+	
+	if(!Parse.User.current()){
+		$location.url('login');
+		if(!$scope.$$phase) {
+			$scope.$apply();  
+		}
+		return;
+	}
+	
+	$scope.collection = $routeParams.collection;
+	
+	$scope.username = Parse.User.current().get('username');
+	
+	$scope.forms = [{
+		name:'Resumes',
+		collection:'resumes'
+	},{
+		name:'Blah',
+		collection:'blah'
+	},{
+		name:'Others',
+		collection:'others'
+	}];
+	
+	$scope.getActionTemplateUrl = function(){
+		return 'views/dobjects/' + ($routeParams.action || 'index') + '.html';
+	}
+	
+	$scope.logout = function(){
+		Parse.User.logOut();
+		$scope.$apply($location.url('login'));
+	}
+	
+}]);
+
 App.controller('DObjectsIndexController',['$routeParams', '$scope', 'ParseDataService', function($routeParams, $scope, PD){
 	
-	document.title = Helper.CapitalizeFirstLetter($routeParams.controller);
+	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
 	
-	$scope.controller = $routeParams.controller;
+	$scope.filters = {};
+	
+	$scope.collection = $routeParams.collection;
+	
+	$scope.fields = configs.form_fields;
 	
 	$scope.dobjects = [];
 	
@@ -16,10 +57,11 @@ App.controller('DObjectsIndexController',['$routeParams', '$scope', 'ParseDataSe
 	
 	
 	$scope.filterData = function(){
-		PD.getObjects($scope.filters, $scope.controller, callbacks);
+		
+		PD.getObjects($scope.filters, $scope.collection, callbacks);
 	}
 	
-	PD.getObjects([], $scope.controller, callbacks);
+	PD.getObjects([], $scope.collection, callbacks);
 }]);
 
 
@@ -27,7 +69,7 @@ App.controller('DObjectsCreateController', ['$routeParams', '$scope', 'ParseData
 	
 	document.title = 'Create';
 	
-	$scope.controller = $routeParams.controller;
+	$scope.collection = $routeParams.collection;
 	
 	$scope.fields = {};//need this for dynamic loaded form fields
 	
@@ -36,7 +78,7 @@ App.controller('DObjectsCreateController', ['$routeParams', '$scope', 'ParseData
 	$scope.saveObject = function(){
 	
 		var saveObject = function(){
-			PD.saveObject($scope.fields, $scope.controller, {
+			PD.saveObject($scope.fields, $scope.collection, {
 					onSuccess:function(){
 						alert('success');
 					},

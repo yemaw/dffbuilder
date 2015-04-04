@@ -21,14 +21,14 @@ App.config(['$routeProvider',
 		      	
 		      }).
 		      
-		      when('/:controller/:action/:id', {
-		          templateUrl: 'views/blank.html'
+		      when('/:collection/:action/:id', {
+		          templateUrl: 'views/dobjects/root.html'
 		      }).
-		      when('/:controller/:action', {
-		          templateUrl: 'views/blank.html'
+		      when('/:collection/:action', {
+		          templateUrl: 'views/dobjects/root.html'
 		      }).
-		      when('/:controller', {
-		          templateUrl: 'views/blank.html'
+		      when('/:collection', {
+		          templateUrl: 'views/dobjects/root.html'
 		      }).
 		      
 		      otherwise({
@@ -36,14 +36,6 @@ App.config(['$routeProvider',
 		      });
     }
 ]);
-
-App.controller('RoutingController',['$routeParams','$scope', function($routeParams,$scope){
-	
-	$scope.getTemplateUrl = function(){
-		return 'views/dobjects/' + ($routeParams.action || 'index') + '.html';
-	}
-	
-}]);
 
 /*
 App.service('ControllerChecker', ['$controller', function($controller) {
@@ -64,6 +56,7 @@ App.service('ControllerChecker', ['$controller', function($controller) {
 */
 
 App.service('ParseDataService',[function(){
+	
 	
 	this.getObject = function(objectId, table_class, callbacks){
 		
@@ -112,6 +105,7 @@ App.service('ParseDataService',[function(){
 	  		var pObject = new Parse.Object('Files');
 	  		
 	  		pObject.set('file', objSaved);
+	  		pObject.set('url', objSaved.url());
 	  		
 	  		
 	  		pObject.save(null, {
@@ -151,39 +145,42 @@ App.service('ParseDataService',[function(){
 }]);
 
 
-Parse.initialize("", ""); 
+Parse.initialize("JA0k6WJsInueLYmBorsDWBN0W5F7KC4jv3E5pPUG", "5RNXhfQFGlERuE0ig4G5cvWgkRA5DGlAjVpItil0"); 
 
 
 var configs = {
 	form_fields:[
 		{
 			"column":"father_name",
-			"caption":"Father Name",
+			"label":"Father Name",
 			"type":"textbox",
 			"rules":{
 				"min":"2",
 				"max":"20"
-			}
+			},
+			"show_in_index":true,
 		},
 		{
 			"column":"mother_name",
-			"caption":"Mother Name",
+			"label":"Mother Name",
 			"type":"textbox",
 			"rules":{
 				"min":"2",
 				"max":"20"
-			}
+			},
+			"show_in_index":true,
 		},
 		{
 			"column":"gender",
-			"caption":"Gender",
+			"label":"Gender",
 			"type":"radio",
-			"options":["Male","Female"]
+			"options":["Male","Female"],
+			"show_in_index":true,
 		},
 		{
 			"column":"dob",
-			"caption":"Date of Birth",
-			"type":"date"
+			"label":"Date of Birth",
+			"type":"date",
 		}
 	]	
 	
