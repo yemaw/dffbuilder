@@ -145,7 +145,7 @@ App.service('ParseDataService',[function(){
 }]);
 
 
-Parse.initialize("", ""); 
+Parse.initialize("JA0k6WJsInueLYmBorsDWBN0W5F7KC4jv3E5pPUG", "5RNXhfQFGlERuE0ig4G5cvWgkRA5DGlAjVpItil0"); 
 
 
 var configs = {

@@ -39,12 +39,16 @@ a{cursor:pointer;}
 	
 }
 #dobjects .tab-content .active{
-	box-shadow:1px 1px 3px #e0e0e0;background:#ffffff;/*#bss*/
+	/*box-shadow:1px 1px 3px #e0e0e0;*/
+	background:#ffffff;
 }
 #dobjects .tab-content .tab-pane{
 	padding:20px;
-	border:1px solid #ecf0f1;
+	border:1px solid #e7e7e7;
 	border-top:none;
+	border-radius:2px;
+	border-top-left-radius:0px;
+	
 }
 #dobjects .command-bar{
 	border-bottom:1px dotted #a0a0a0;

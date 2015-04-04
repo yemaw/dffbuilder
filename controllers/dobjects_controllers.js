@@ -128,8 +128,7 @@ function($routeParams, $location, $scope, PD, flash){
 			//$scope.fields's file field are updated with parse file object's data. now ready to save to parse
 			PD.saveObject($scope.fields, $scope.collection, {
 				onSuccess:function(object){
-					$scope.$apply($location.url($scope.collection+'/show/'+object.id));
-					flash('alert alert-success', 'Successfully saved.');
+					$location.url($scope.collection+'/show/'+object.id);
 				},
 				onError:function(){
 					alert('error');
