@@ -65,7 +65,7 @@ App.controller('DObjectsIndexController',['$routeParams', '$scope', 'ParseDataSe
 }]);
 
 
-App.controller('DObjectsCreateController', ['$routeParams', '$scope', 'ParseDataService', function($routeParams, $scope, PD){
+App.controller('DObjectsCreateController', ['$routeParams', '$location', '$scope', 'ParseDataService', function($routeParams, $location, $scope, PD){
 	
 	document.title = 'Create';
 	
@@ -76,45 +76,161 @@ App.controller('DObjectsCreateController', ['$routeParams', '$scope', 'ParseData
 	$scope.form_fields = configs.form_fields;
 	
 	$scope.saveObject = function(){
-	
-		var saveObject = function(){
-			PD.saveObject($scope.fields, $scope.collection, {
-					onSuccess:function(){
-						alert('success');
-					},
-					onError:function(){
-						alert('error');
-					}
-				});
-		}
 		
-		var cover_photos = $("#cover_photos")[0];
-		if (cover_photos && cover_photos.files && cover_photos.files.length > 0) {
-			$scope.fields.cover_photos = [];
-			async.each(cover_photos.files, function(file, callback){
-				var name = file.name || 'image.jpg';	
-				PD.saveFile(name, file, {
-					onSuccess:function(objSaved){
-						//flattern the parse file object
-						var cp = {FileId:objSaved.id,url:objSaved.get('file').url()};
-						$scope.fields.cover_photos.push(cp);
-						callback();
-					},
-					onError:function(error){
-						callback('Cannot upload file. '.error);
-					}
-				});
-			},function(error){
-				if(error){
-					console.log(error);
+		async.eachSeries(Object.keys($scope.fields),function(_field,callback){
+			
+			var field = $scope.fields[_field];			
+			var form_field;
+			for(var i = 0; i< $scope.form_fields.length; i++){
+				if($scope.form_fields[i].column === _field){
+					form_field = $scope.form_fields[i];
+					break;
 				}
-				saveObject();
+			}
+			
+			var type = (form_field && form_field.type ) ? form_field.type : '';
+			
+			if(['image','images','file','files'].indexOf(type) >= 0){//is file field ?
+				var _files = [];
+				async.each($scope.fields[_field], function(file, callback){//loop and upload all files.
+					var name = file.name || 'image.jpg';//
+					
+					PD.saveFile(name, file, {
+						onSuccess:function(objSaved){
+							var f = {FileId:objSaved.id,url:objSaved.get('file').url()};//flattern the parse file object
+							_files.push(f);console.log(f);
+							callback();
+						},
+						onError:function(error){
+							callback('Cannot upload file. '.error);
+						}
+					});
+				},function(error){
+					if(error){
+						alert('a file upload error');
+						console.log(error);
+					}console.log(_files);
+					$scope.fields[_field] = _files;
+					callback(null);
+				});	
+			} else {
+				callback(null);
+			}
+		},function(error){
+			if(error){
+				alert('files upload error');
+				console.log(error);
+			}
+			//$scope.fields's file field are updated with parse file object's data. now ready to save to parse
+			PD.saveObject($scope.fields, $scope.collection, {
+				onSuccess:function(object){
+					alert('success');
+					$scope.$apply($location.url($scope.collection+'/show/'+object.id));
+				},
+				onError:function(){
+					alert('error');
+				}
 			});
-			 
-		} else {
-			saveObject();
-		}
-		
+		});
 		
 	}
 }]);
+
+App.controller('DObjectsEditController',['$routeParams', '$scope', 'ParseDataService', function($routeParams, $scope, PD){
+	
+	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
+	
+	$scope.collection = $routeParams.collection;
+	
+	$scope.fields = {};//need this for dynamic loaded form fields
+	
+	$scope.form_fields = configs.form_fields;
+	
+	PD.getObject($routeParams.id, $scope.collection, {
+		onSuccess:function(object){
+			$scope.current_object = object;
+			$scope.$apply();
+			
+			document.title += ' - '+object.get('name');
+		},
+		onError:function(error){
+			alert('Object retrieve error.');
+			console.log(error);
+		}
+	});
+	
+	$scope.saveObject = function(){
+		
+	}
+}]);
+
+
+App.controller('DObjectsShowController',['$routeParams', '$scope', 'ParseDataService', function($routeParams, $scope, PD){
+	
+	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
+	
+	$scope.collection = $routeParams.collection;
+	
+	$scope.fields = {};//need this for dynamic loaded form fields
+	
+	$scope.form_fields = configs.form_fields;
+	
+	PD.getObject($routeParams.id, $scope.collection, {
+		onSuccess:function(object){
+			$scope.current_object = object;
+			$scope.$apply();
+			
+			document.title += ' - '+object.get('name');
+		},
+		onError:function(error){
+			alert('Object retrieve error.');
+			console.log(error);
+		}
+	});
+}]);
+
+
+
+App.directive('appFilereader', function($q) {
+    var slice = Array.prototype.slice;
+
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        link: function(scope, element, attrs, ngModel) {
+                if (!ngModel) return;
+
+                ngModel.$render = function() {};
+
+                element.bind('change', function(e) {
+                    var element = e.target;
+                    if (element.multiple) ngModel.$setViewValue(element.files);
+                    else ngModel.$setViewValue(element.files.length ? element.files[0] : null);
+					/*
+                    $q.all(slice.call(element.files, 0).map(readFile))
+                        .then(function(values) {
+                            if (element.multiple) ngModel.$setViewValue(values);
+                            else ngModel.$setViewValue(values.length ? values[0] : null);
+                        });
+
+                    function readFile(file) {
+                    	
+                        var deferred = $q.defer();
+
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            deferred.resolve(e.target.result);
+                        };
+                        reader.onerror = function(e) {
+                            deferred.reject(e);
+                        };
+                        reader.readAsDataURL(file);
+
+                        return deferred.promise;
+                    }*/
+
+                }); //change
+
+            } //link
+    }; //return
+});

@@ -49,9 +49,17 @@ a{cursor:pointer;}
  	padding-bottom:20px;
  	margin-bottom:20px;
 }
-
+#dobjects #page-show .title{
+	margin:0px auto 20px auto;
+}
+#dobjects #page-show .row,
 #dobjects form .row{
 	margin-bottom:10px;
+}
+#dobjects .row .thumbnail{
+	margin:5px;
+	max-width:128px;
+	max-height:128px;
 }
 
 #dobjects .command-bar .btn{

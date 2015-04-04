@@ -151,6 +151,11 @@ Parse.initialize("JA0k6WJsInueLYmBorsDWBN0W5F7KC4jv3E5pPUG", "5RNXhfQFGlERuE0ig4
 var configs = {
 	form_fields:[
 		{
+			"column":"cover_photos",
+			"label":"Photo",
+			"type":"images",
+		},
+		{
 			"column":"father_name",
 			"label":"Father Name",
 			"type":"textbox",

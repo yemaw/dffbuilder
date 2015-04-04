@@ -1,1 +1,17 @@
-edit
+<div ng-controller="DObjectsEditController">
+	<form ng-submit="saveObject()">
+		<div class="command-bar clearfix">
+			<div class="pull-left">
+				<a href="#{{collection}}" class="btn btn-small btn-default">Back</a>
+			</div>
+			<div class="pull-right">
+				<input type="button" value="Delete" class="btn btn-small btn-danger" />
+				<a ng-href="#{{collection}}/show/{{current_object.id}}" class="btn btn-small btn-default">Cancel</a>
+				<input type="submit" value="Save" class="btn btn-small btn-primary" />
+			</div>
+		</div>
+		
+		<div ng-include="'views/dobjects/_form.html'"></div>
+		
+	</form>
+</div>
