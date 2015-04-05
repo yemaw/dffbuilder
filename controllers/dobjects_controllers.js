@@ -140,8 +140,8 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 }]);
 
 App.controller('DObjectsEditController',
-['$routeParams', '$scope', 'ParseDataService', 'flash', 
-function($routeParams, $scope, PD, flash){
+['$routeParams', '$scope', 'ParseDataService', 'flash', 'FormsStructureService',
+function($routeParams, $scope, PD, flash, FSS){
 	
 	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
 	

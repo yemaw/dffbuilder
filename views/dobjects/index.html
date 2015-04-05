@@ -20,7 +20,6 @@
 			<td></td>
 		</tr>
 	    <tr ng-repeat="object in dobjects" ng-cloak="resumes.length > 0">
-	    	<td>{{object.get('name')}}</td>
 	    	<td ng-repeat="field in fields | filter:{show_in_index:true}">
 	    		{{object.get(field.column)}}
 	    	</td>

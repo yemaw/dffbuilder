@@ -6,6 +6,7 @@ var forms = {
 				"column":"name",
 				"label":"Name",
 				"type":"textbox",
+				"show_in_index":true,
 			},
 			{
 				"column":"cover_photos",
