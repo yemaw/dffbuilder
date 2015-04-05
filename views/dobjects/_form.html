@@ -1,12 +1,3 @@
-<div class="row">
-	<div class="col-md-2"><label>Name</label></div>
-	<div class="col-md-10"><input type="textbox" required class="form-control" ng-model="fields.name" /></div>
-</div>
-
-<!--<div class="row">
-	<div class="col-md-2"><label>Image</label></div>
-	<div class="col-md-10"><input type="file" class="form-control" id="cover_photos" multiple accept="image/*" /></div>
-</div>-->
 
 <div class="row" ng-repeat="field in form_fields">
 	<div class="col-md-2"><label>{{field.label}}</label></div>

@@ -3,6 +3,11 @@ var forms = {
 			"name":"Samples",
 			"form_fields":[
 			{
+				"column":"name",
+				"label":"Name",
+				"type":"textbox",
+			},
+			{
 				"column":"cover_photos",
 				"label":"Photo",
 				"type":"images",

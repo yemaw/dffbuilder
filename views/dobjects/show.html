@@ -9,10 +9,6 @@
 	</div>
 	<flash:messages></flash:messages>
 	<div>
-		<div class="row">
-			<div class="col-md-6"><h2 class="title">{{current_object.get('name')}}</h2></div>
-		</div>
-		
 		<div class="row" ng-repeat="field in form_fields">
 			<div class="col-md-2"><label>{{field.label}}</label></div>
 			<div class="col-md-10" ng-switch on="field.type">
@@ -23,7 +19,5 @@
 				<div ng-switch-default>{{current_object.get(field.column)}}</div>
 			</div>
 		</div>
-		
-		
 	</div>
 </div>

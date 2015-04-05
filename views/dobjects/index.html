@@ -10,12 +10,10 @@
 	<flash:messages></flash:messages>
 	<table class="table table-striped" style="margin-top:20px;">
 		<tr>
-			<th>Name</th>
 			<th ng-repeat="field in fields | filter:{show_in_index:true}">{{field.label}}</th>
 			<th></th>
 		</tr>
 		<tr>
-			<td><input type="text" class="form-control" ng-change="filterData()" ng-model="filters.name" /></td>
 			<td ng-repeat="field in fields | filter:{show_in_index:true}">
 				<input type="text" class="form-control" ng-change="filterData()" ng-model="filters[field.column]"/>
 			</td>
