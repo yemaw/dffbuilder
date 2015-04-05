@@ -4,7 +4,7 @@
 			<a href="#{{collection}}" class="btn btn-small btn-default">Back</a>
 		</div>
 		<div class="pull-right">
-			<a href="#{{collection}}/edit/{{current_object.id}}" type="submit" value="Edit" class="btn btn-small btn-primary">Edit</a>
+			<a href="#{{collection}}/edit/{{fields.objectId}}" type="submit" value="Edit" class="btn btn-small btn-primary">Edit</a>
 		</div>
 	</div>
 	<flash:messages></flash:messages>
@@ -12,11 +12,11 @@
 		<div class="row" ng-repeat="field in form_fields">
 			<div class="col-md-2"><label>{{field.label}}</label></div>
 			<div class="col-md-10" ng-switch on="field.type">
-				<div ng-switch-when="date">{{current_object.get(field.column) | date:'yyyy-MM-dd'}}</div>
+				<div ng-switch-when="date">{{fields[field.column].iso | date:'yyyy-MM-dd'}}</div>
 				<div ng-switch-when="images">
-					<a  ng-repeat="image in current_object.get(field.column)" ng-href="{{image.url}}" target="_blank"><img ng-src="{{image.thumbnail_url || image.url}}" class="pull-left thumbnail" /></a>
+					<a  ng-repeat="image in fields[field.column]" ng-href="{{image.url}}" target="_blank"><img ng-src="{{image.thumbnail_url || image.url}}" class="pull-left thumbnail" /></a>
 				</div>
-				<div ng-switch-default>{{current_object.get(field.column)}}</div>
+				<div ng-switch-default>{{fields[field.column]}}</div>
 			</div>
 		</div>
 	</div>

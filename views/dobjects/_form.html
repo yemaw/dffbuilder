@@ -1,12 +1,20 @@
-
 <div class="row" ng-repeat="field in form_fields">
 	<div class="col-md-2"><label>{{field.label}}</label></div>
 	<div class="col-md-10" ng-switch on="field.type">
+		
 		<select ng-switch-when="select" ng-options="option for option in field.options" ng-model="fields[field.column]" class="form-control"></select>
+		
 		<div ng-switch-when="radio" ng-repeat="option in field.options"><input type="radio" ng-model="fields[field.column]" name="{{field.column}}" value="{{option}}">&nbsp;&nbsp;{{option}}</div>
-		<input ng-switch-when="date" ui-date="{changeYear: true, changeMonth: true, yearRange: '1950:-0'}" ng-model="fields[field.column]" class="form-control" /><!-- ui-date-format="DD, d MM, yy" -->
-		<input ng-switch-when="images" app-filereader type="file" multiple accept="image/*"  ng-model="fields[field.column]" class="form-control" />
-		<!--<input ng-switch-when="images" app-filereader type="file" multiple accept="images/*" />-->
+		
+		<input ng-switch-when="date" ui-date="{changeYear: true, changeMonth: true, yearRange: '1950:-0', dateFormat:'yy-mm-dd'}" ng-model="fields[field.column]" class="form-control" /><!-- ui-date-format="DD, d MM, yy" -->
+		
+		<div ng-switch-when="images">
+			<div><a  ng-repeat="image in fields[field.column]" ng-href="{{image.url}}" target="_blank"><img ng-src="{{image.thumbnail_url || image.url}}" class="pull-left thumbnail" /></a></div>
+			<input app-filereader type="file" multiple accept="image/*"  ng-model="fields[field.column]" class="form-control" />
+		</div>
+		
 		<input ng-switch-default type="textbox" ng-model="fields[field.column]" class="form-control" />
 	</div>
 </div>
+
+<code>{{fields}}</code>

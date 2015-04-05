@@ -152,11 +152,17 @@ function($routeParams, $scope, PD, flash, FSS){
 	$scope.form_fields = FSS.getFormFields($scope.collection);
 	
 	PD.getObject($routeParams.id, $scope.collection, {
-		onSuccess:function(object){
-			$scope.current_object = object;
+		onSuccess:function(objGot){
+			objGot = JSON.parse(JSON.stringify(objGot));
+			for(var i=0; i<$scope.form_fields.length; i++){
+				if($scope.form_fields[i].type === 'date'){
+					//console.log(objGot[$scope.form_fields[i].column].iso);
+					objGot[$scope.form_fields[i].column] = objGot[$scope.form_fields[i].column].iso;
+					//console.log(objGot[$scope.form_fields[i].column]);
+				}
+			}
+			$scope.fields = objGot;
 			$scope.$apply();
-			
-			document.title += ' - '+object.get('name');
 		},
 		onError:function(error){
 			alert('Object retrieve error.');
@@ -183,11 +189,11 @@ function($routeParams, $scope, PD, flash, FSS){
 	$scope.form_fields = FSS.getFormFields($scope.collection);
 	
 	PD.getObject($routeParams.id, $scope.collection, {
-		onSuccess:function(object){
-			$scope.current_object = object;
-			$scope.$apply();
+		onSuccess:function(objGot){
+			objGot = JSON.parse(JSON.stringify(objGot));
 			
-			document.title += ' - '+object.get('name');
+			$scope.fields = objGot;
+			$scope.$apply();
 		},
 		onError:function(error){
 			alert('Object retrieve error.');
