@@ -101,7 +101,8 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 					
 					PD.saveFile(name, file, {
 						onSuccess:function(objSaved){
-							var f = {FileId:objSaved.id,url:objSaved.get('file').url()};//flattern the parse file object
+							objSaved = Helper.ParseToJSON(objSaved, $scope.form_fields);
+							var f = {FileId:objSaved.objectId,url:objSaved['file'].url};//flattern the parse file object
 							_files.push(f);
 							callback();
 						},
@@ -127,8 +128,9 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 			}
 			//$scope.fields's file field are updated with parse file object's data. now ready to save to parse
 			PD.saveObject($scope.fields, $scope.collection, {
-				onSuccess:function(object){
-					$location.url($scope.collection+'/show/'+object.id);
+				onSuccess:function(obj){
+					obj = Helper.ParseToJSON(obj, $scope.form_fields);
+					Helper.SafeScopeApply($scope, $location.url($scope.collection+'/show/'+obj.objectId));
 				},
 				onError:function(){
 					alert('error');
@@ -153,15 +155,7 @@ function($routeParams, $scope, PD, flash, FSS){
 	
 	PD.getObject($routeParams.id, $scope.collection, {
 		onSuccess:function(objGot){
-			objGot = JSON.parse(JSON.stringify(objGot));
-			for(var i=0; i<$scope.form_fields.length; i++){
-				if($scope.form_fields[i].type === 'date'){
-					//console.log(objGot[$scope.form_fields[i].column].iso);
-					objGot[$scope.form_fields[i].column] = objGot[$scope.form_fields[i].column].iso;
-					//console.log(objGot[$scope.form_fields[i].column]);
-				}
-			}
-			$scope.fields = objGot;
+			$scope.fields = Helper.ParseToJSON(objGot, $scope.form_fields);
 			$scope.$apply();
 		},
 		onError:function(error){
@@ -190,9 +184,7 @@ function($routeParams, $scope, PD, flash, FSS){
 	
 	PD.getObject($routeParams.id, $scope.collection, {
 		onSuccess:function(objGot){
-			objGot = JSON.parse(JSON.stringify(objGot));
-			
-			$scope.fields = objGot;
+			$scope.fields = Helper.ParseToJSON(objGot, $scope.form_fields);
 			$scope.$apply();
 		},
 		onError:function(error){

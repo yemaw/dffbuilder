@@ -5,7 +5,23 @@ var Helper = {
 	 	 if(word && typeof word === 'string'){
 	 		 return word.charAt(0).toUpperCase()+word.slice(1);		
 	 	 }
-	 }
+	 },
+	 ParseToJSON : function(parseObj, form_fields){
+		
+		var jsonObj = JSON.parse(JSON.stringify(parseObj));
+		for(var i=0; i<form_fields.length; i++){
+			if(form_fields[i].type === 'date'){
+				if(jsonObj[form_fields[i].column] && jsonObj[form_fields[i].column].iso){
+					jsonObj[form_fields[i].column] = jsonObj[form_fields[i].column].iso;	
+				}
+				
+			}
+		}
+		return jsonObj;
+	},
+	SafeScopeApply: function (scope, fn) {
+	    (scope.$$phase || scope.$root.$$phase) ? fn() : scope.$apply(fn);
+	}
 }
 
 
