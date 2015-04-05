@@ -1,0 +1,44 @@
+var forms = {
+	"resumes":{
+			"name":"Samples",
+			"form_fields":[
+			{
+				"column":"cover_photos",
+				"label":"Photo",
+				"type":"images",
+			},
+			{
+				"column":"father_name",
+				"label":"Father Name",
+				"type":"textbox",
+				"rules":{
+					"min":"2",
+					"max":"20"
+				},
+				"show_in_index":true,
+			},
+			{
+				"column":"mother_name",
+				"label":"Mother Name",
+				"type":"textbox",
+				"rules":{
+					"min":"2",
+					"max":"20"
+				},
+				"show_in_index":true,
+			},
+			{
+				"column":"gender",
+				"label":"Gender",
+				"type":"radio",
+				"options":["Male","Female"],
+				"show_in_index":true,
+			},
+			{
+				"column":"dob",
+				"label":"Date of Birth",
+				"type":"date",
+			}
+		]			
+	}
+}	

@@ -36,8 +36,8 @@ function($location, $routeParams, $scope, PD){
 }]);
 
 App.controller('DObjectsIndexController',
-['$routeParams', '$scope', 'ParseDataService', 'flash',
-function($routeParams, $scope, PD, flash){
+['$routeParams', '$scope', 'ParseDataService', 'flash','FormsStructureService',
+function($routeParams, $scope, PD, flash, FSS){
 	
 	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
 	
@@ -45,7 +45,7 @@ function($routeParams, $scope, PD, flash){
 	
 	$scope.collection = $routeParams.collection;
 	
-	$scope.fields = configs.form_fields;
+	$scope.fields = FSS.getFormFields($scope.collection);
 	
 	$scope.dobjects = [];
 	
@@ -68,8 +68,8 @@ function($routeParams, $scope, PD, flash){
 
 
 App.controller('DObjectsCreateController', 
-['$routeParams', '$location', '$scope', 'ParseDataService', 'flash',
-function($routeParams, $location, $scope, PD, flash){
+['$routeParams', '$location', '$scope', 'ParseDataService', 'flash','FormsStructureService',
+function($routeParams, $location, $scope, PD, flash, FSS){
 	
 	document.title = 'Create';
 	
@@ -77,7 +77,7 @@ function($routeParams, $location, $scope, PD, flash){
 	
 	$scope.fields = {};//need this for dynamic loaded form fields
 	
-	$scope.form_fields = configs.form_fields;
+	$scope.form_fields = FSS.getFormFields($scope.collection);
 	
 	$scope.saveObject = function(){
 		
@@ -149,7 +149,7 @@ function($routeParams, $scope, PD, flash){
 	
 	$scope.fields = {};//need this for dynamic loaded form fields
 	
-	$scope.form_fields = configs.form_fields;
+	$scope.form_fields = FSS.getFormFields($scope.collection);
 	
 	PD.getObject($routeParams.id, $scope.collection, {
 		onSuccess:function(object){
@@ -171,8 +171,8 @@ function($routeParams, $scope, PD, flash){
 
 
 App.controller('DObjectsShowController',
-['$routeParams', '$scope', 'ParseDataService', 'flash',
-function($routeParams, $scope, PD, flash){
+['$routeParams', '$scope', 'ParseDataService', 'flash', 'FormsStructureService',
+function($routeParams, $scope, PD, flash, FSS){
 	
 	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
 	
@@ -180,7 +180,7 @@ function($routeParams, $scope, PD, flash){
 	
 	$scope.fields = {};//need this for dynamic loaded form fields
 	
-	$scope.form_fields = configs.form_fields;
+	$scope.form_fields = FSS.getFormFields($scope.collection);
 	
 	PD.getObject($routeParams.id, $scope.collection, {
 		onSuccess:function(object){
@@ -197,6 +197,13 @@ function($routeParams, $scope, PD, flash){
 }]);
 
 
+App.service('FormsStructureService',[function(){
+	this.getFormFields = function(form_name){
+		return forms[form_name].form_fields;
+	}
+	
+	
+}]);
 
 App.directive('appFilereader', function($q) {
     var slice = Array.prototype.slice;

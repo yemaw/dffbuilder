@@ -145,48 +145,4 @@ App.service('ParseDataService',[function(){
 }]);
 
 
-Parse.initialize("JA0k6WJsInueLYmBorsDWBN0W5F7KC4jv3E5pPUG", "5RNXhfQFGlERuE0ig4G5cvWgkRA5DGlAjVpItil0"); 
-
-
-var configs = {
-	form_fields:[
-		{
-			"column":"cover_photos",
-			"label":"Photo",
-			"type":"images",
-		},
-		{
-			"column":"father_name",
-			"label":"Father Name",
-			"type":"textbox",
-			"rules":{
-				"min":"2",
-				"max":"20"
-			},
-			"show_in_index":true,
-		},
-		{
-			"column":"mother_name",
-			"label":"Mother Name",
-			"type":"textbox",
-			"rules":{
-				"min":"2",
-				"max":"20"
-			},
-			"show_in_index":true,
-		},
-		{
-			"column":"gender",
-			"label":"Gender",
-			"type":"radio",
-			"options":["Male","Female"],
-			"show_in_index":true,
-		},
-		{
-			"column":"dob",
-			"label":"Date of Birth",
-			"type":"date",
-		}
-	]	
-	
-}
+Parse.initialize(configs.PARSE_APP_KEY, configs.PARSE_JS_KEY); 
