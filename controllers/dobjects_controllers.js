@@ -25,7 +25,16 @@ function($location, $routeParams, $scope, PD){
 	}];
 	
 	$scope.getActionTemplateUrl = function(){
-		return 'views/dobjects/' + ($routeParams.action || 'index') + '.html';
+		var path;
+		switch ($routeParams.collection){
+			case 'settings':
+				path = 'views/dobjects/settings.html';
+				break;
+			default :
+				path = 'views/dobjects/' + ($routeParams.action || 'index') + '.html';
+				break;
+		}
+		return path;
 	}
 	
 	$scope.logout = function(){
@@ -192,6 +201,15 @@ function($routeParams, $scope, PD, flash, FSS){
 			console.log(error);
 		}
 	});
+}]);
+
+
+App.controller('DObjectsSettingsController',
+['$scope','FormsStructureService',
+function($scope, FSS){
+	$scope.forms_fields = {};
+	$scope.forms_fields['resumes'] = FSS.getFormFields('resumes');//#tmp get list of forms
+	
 }]);
 
 
