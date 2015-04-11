@@ -7,11 +7,13 @@ var forms = {
 				"label":"Name",
 				"type":"textbox",
 				"show_in_index":true,
+				"required":true,
 			},
 			{
 				"column":"cover_photos",
 				"label":"Photo",
 				"type":"images",
+				"required":true,
 			},
 			{
 				"column":"father_name",
@@ -22,6 +24,7 @@ var forms = {
 					"max":"20"
 				},
 				"show_in_index":true,
+				"required":true,
 			},
 			{
 				"column":"mother_name",
@@ -39,11 +42,13 @@ var forms = {
 				"type":"radio",
 				"options":["Male","Female"],
 				"show_in_index":true,
+				"required":true,
 			},
 			{
 				"column":"dob",
 				"label":"Date of Birth",
 				"type":"date",
+				"required":true,
 			}
 		]			
 	}
