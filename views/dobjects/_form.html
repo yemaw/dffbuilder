@@ -10,10 +10,18 @@
 		
 		<div ng-switch-when="images">
 			<div ng-if="fields.objectId"><a  ng-repeat="image in fields[field.column]" ng-href="{{image.url}}" target="_blank"><img ng-src="{{image.thumbnail_url || image.url}}" class="pull-left thumbnail" /></a></div>
-			<input app-filereader type="file" multiple accept="image/*"  ng-model="fields[field.column]" ng-required="!fields.objectId && field.required" name="{{field.column}}" class="form-control" />
+			<input ng-if="!fields.objectId" app-filereader type="file" multiple accept="image/*" ng-model="fields[field.column]"     ng-required="field.required" name="{{field.column}}" class="form-control" />
+			<input ng-if="fields.objectId"  app-filereader type="file" multiple accept="image/*" ng-model="files_edit[field.column]" ng-required="field.required && !fields[field.column]" name="{{field.column}}" class="form-control" />
 		</div>
 		
 		<input ng-switch-default type="textbox" ng-model="fields[field.column]" ng-required="field.required" name="{{field.column}}" class="form-control" />
 	</div>
 	
 </div>
+<code>{{fields}}</code>
+
+<hr />
+<code>{{fields.dob}}</code>
+
+<hr />
+<code>{{files_edit}}</code>

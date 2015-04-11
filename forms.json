@@ -13,7 +13,7 @@ var forms = {
 				"column":"cover_photos",
 				"label":"Photo",
 				"type":"images",
-				"required":true,
+				
 			},
 			{
 				"column":"father_name",

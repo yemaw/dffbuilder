@@ -91,6 +91,7 @@ App.service('ParseDataService',[function(){
 	
 
 	this.saveObject = function(objIn, table_class, callbacks){
+		
 		var pObject = new Parse.Object(table_class);
 		
  		for(var key in objIn){
@@ -110,6 +111,27 @@ App.service('ParseDataService',[function(){
 			error: function(obj, error) {
 				callbacks && callbacks.onError && typeof callbacks.onError === 'function' && callbacks.onError(error);
 			}
+		});
+	}
+	
+	this.deleteObject = function(objectId, table_class, callbacks){
+		
+		var pObject = Parse.Object.extend(table_class);
+		var query = new Parse.Query(pObject);
+		query.get(objectId, {
+		    success: function(objGot) {
+		    	objGot.destroy({
+				  success: function(obj) {
+				      callbacks && callbacks.onSuccess && typeof callbacks.onSuccess === 'function' && callbacks.onSuccess(obj);
+				  },
+				  error: function(obj, error) {
+					  callbacks && callbacks.onError && typeof callbacks.onError === 'function' && callbacks.onError(error);    
+				  }
+				});
+		    },
+		    error: function(obj, error) {
+		    	callbacks && callbacks.onError && typeof callbacks.onError === 'function' && callbacks.onError(error);
+		    }
 		});
 	}
 	

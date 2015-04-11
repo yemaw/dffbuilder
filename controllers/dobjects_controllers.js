@@ -90,20 +90,24 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 	
 	$scope.saveObject = function(){
 		
-		async.eachSeries(Object.keys($scope.fields),function(_field,callback){
-			
-			var field = $scope.fields[_field];			
-			var form_field;
+		async.eachSeries($scope.form_fields,function(form_field,callback){
+			var _field = form_field.column;
+			var field = $scope.fields[_field];
+			if(!field){
+				callback(null);
+				return;
+			}
+			/*var form_field;
 			for(var i = 0; i< $scope.form_fields.length; i++){
 				if($scope.form_fields[i].column === _field){
 					form_field = $scope.form_fields[i];
 					break;
 				}
-			}
+			}*/
 			
-			var type = (form_field && form_field.type ) ? form_field.type : '';
+			//var type = (form_field && form_field.type ) ? form_field.type : '';
 			
-			if(['image','images','file','files'].indexOf(type) >= 0){//is file field ?
+			if(['image','images','file','files'].indexOf(form_field.type) >= 0){//is file field ?
 				var _files = [];
 				async.each($scope.fields[_field], function(file, callback){//loop and upload all files.
 					var name = file.name || 'image.jpg';//
@@ -151,14 +155,15 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 }]);
 
 App.controller('DObjectsEditController',
-['$routeParams', '$scope', 'ParseDataService', 'flash', 'FormsStructureService',
-function($routeParams, $scope, PD, flash, FSS){
+['$routeParams','$location', '$window', '$scope', 'ParseDataService', 'flash', 'FormsStructureService',
+function($routeParams, $location, $window, $scope, PD, flash, FSS){
 	
 	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
 	
 	$scope.collection = $routeParams.collection;
 	
 	$scope.fields = {};//need this for dynamic loaded form fields
+	$scope.files_edit = {}; //for file type fields new uploads
 	
 	$scope.form_fields = FSS.getFormFields($scope.collection);
 	
@@ -174,7 +179,81 @@ function($routeParams, $scope, PD, flash, FSS){
 	});
 	
 	$scope.saveObject = function(){
-		
+		async.eachSeries($scope.form_fields,function(form_field,callback){
+			var _field = form_field.column;
+			var field = $scope.fields[_field];
+			if(!field){
+				callback(null);
+				return;
+			}
+			
+			if( ['image','images','file','files'].indexOf(form_field.type) >= 100 && $scope.files_edit[_field] ){//is file field ?
+				var _files = []; console.log('aeiou');
+				async.each($scope.files_edit[_field], function(file, callback){//loop and upload all new files.notice, data is taken from different field `files_edit`
+					var name = file.name || 'image.jpg';//
+					
+					PD.saveFile(name, file, {
+						onSuccess:function(objSaved){
+							objSaved = Helper.ParseToJSON(objSaved, $scope.form_fields);
+							var f = {FileId:objSaved.objectId,url:objSaved['file'].url};//flattern the parse file object
+							_files.push(f);
+							callback();
+						},
+						onError:function(error){
+							callback('Cannot upload file. '.error);
+						}
+					});
+				},function(error){
+					if(error){
+						alert('a file upload error');
+						console.log(error);
+					}
+					
+					
+					$scope.fields[_field] = $scope.fields[_field] || [];//#really need?
+					$scope.fields[_field] = $scope.fields[_field].concat(_files);
+					//console.log($scope.fields[_field]);
+					callback(null);
+				});	
+			} else if( form_field.type === 'date' ){// && (typeof $scope.fields[_field] === 'string')
+				$scope.fields[_field] = new Date($scope.fields[_field]);
+				callback(null);
+			} else {
+				callback(null);
+			}
+		},function(error){
+			if(error){
+				alert('files upload error');
+				console.log(error);
+			}
+			$scope.fields = angular.toJson($scope.fields);
+			
+			//$scope.fields's file field are updated with parse file object's data. now ready to save to parse
+			PD.saveObject($scope.fields, $scope.collection, {
+				onSuccess:function(obj){
+					obj = Helper.ParseToJSON(obj, $scope.form_fields);
+					Helper.SafeScopeApply($scope, $location.url($scope.collection+'/show/'+obj.objectId));
+				},
+				onError:function(error){
+					console.log(error);
+					alert('error');
+				}
+			});
+		});
+	}
+	
+	$scope.deleteObject = function(){
+		if($window.confirm('Are you sure you want to delete?')){
+			PD.deleteObject($scope.fields.objectId,$scope.collection,{
+				onSuccess:function(obj){
+					Helper.SafeScopeApply($scope, $location.url($scope.collection));
+				},
+				onError:function(error){
+					console.log(error);
+					alert('error');
+				}
+			});	
+		}
 	}
 }]);
 

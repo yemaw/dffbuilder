@@ -5,7 +5,7 @@
 				<a href="#{{collection}}" class="btn btn-small btn-default">Back</a>
 			</div>
 			<div class="pull-right">
-				<input type="button" value="Delete" class="btn btn-small btn-danger" />
+				<input type="button" ng-click="deleteObject()" value="Delete" class="btn btn-small btn-danger" />
 				<a ng-href="#{{collection}}/show/{{fields.objectId}}" class="btn btn-small btn-default">Cancel</a>
 				<input type="submit" value="Save" class="btn btn-small btn-primary" />
 			</div>
