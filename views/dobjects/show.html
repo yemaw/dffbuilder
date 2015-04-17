@@ -14,7 +14,9 @@
 			<div class="col-md-10" ng-switch on="field.type">
 				<div ng-switch-when="date">{{fields[field.column] | date:'yyyy-MM-dd'}}</div>
 				<div ng-switch-when="images">
-					<a  ng-repeat="image in fields[field.column]" ng-href="{{image.url}}" target="_blank"><img ng-src="{{image.thumbnail_url || image.url}}" class="pull-left thumbnail" /></a>
+					<a ng-repeat="image in fields[field.column]" ng-href="{{image.url}}" class="pull-left thumbnail_container" target="_blank">
+						<img ng-src="{{image.thumbnail_url || image.url}}" class="thumbnail" />
+					</a>
 				</div>
 				<div ng-switch-default>{{fields[field.column]}}</div>
 			</div>
