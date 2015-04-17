@@ -48,7 +48,7 @@ App.config(['$routeProvider',
 		      }).
 		      
 		      otherwise({
-		          redirectTo: '/404'
+		          redirectTo: '/login' //otherwise login will rediret to home route.
 		      });
     }
 ]);
