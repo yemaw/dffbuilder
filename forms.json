@@ -19,7 +19,7 @@ var forms = [
 			"column":"category",
 			"label":"Category",
 			"type":"radio",
-			"options":["Standalone","JQuery","AngularJS","ReactJS", "Tool","Webased Tool"],
+			"options":["Web App", "Standalone", "JQuery", "AngularJS","ReactJS", "Tool"],
 			"show_in_index":true,
 		},
 		{
