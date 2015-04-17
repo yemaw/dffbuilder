@@ -1,9 +1,15 @@
-<div ng-controller="DObjectsRootController" id="dobjects" class="container">
+<div ng-controller="DObjectsRootController" id="dobjects" class="container" ng-init="tabs_to_show = 3">
 
 <ul class="nav nav-tabs">
-  	<li ng-repeat="form in forms" ng-class="collection === form.collection ? 'active' : ''">
+  	<li ng-repeat="form in forms | limitTo:tabs_to_show" ng-class="collection === form.collection ? 'active' : ''">
   		<a ng-href="#{{form.collection}}" data-toggle="tab" aria-expanded="{{collection === form.collection ? true : false}}">{{form.name}}</a>
   	</li>
+	<li class="dropdown" ng-if="forms.length > tabs_to_show">
+		<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);" aria-expanded="false">More <span class="caret"></span></a>
+		<ul class="dropdown-menu">
+		  <li ng-repeat="form in forms.slice(tabs_to_show, forms.length)" ng-class="collection === form.collection ? 'active' : ''"><a href="#{{form.collection}}" data-toggle="tab">{{form.name}}</a></li>
+		</ul>
+	</li>
   
   	<li class="dropdown pull-right">
     	<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">{{username}} <span class="caret"></span></a>

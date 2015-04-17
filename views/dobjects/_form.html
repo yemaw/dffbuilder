@@ -9,7 +9,12 @@
 		<input ng-switch-when="date" ui-date="{changeYear: true, changeMonth: true, yearRange: '1950:-0', dateFormat:'yy-mm-dd'}" ng-model="fields[field.column]" ng-required="field.required" name="{{field.column}}" class="form-control" /><!-- ui-date-format="DD, d MM, yy" -->
 		
 		<div ng-switch-when="images">
-			<div ng-if="fields.objectId"><a  ng-repeat="image in fields[field.column]" ng-href="{{image.url}}" target="_blank"><img ng-src="{{image.thumbnail_url || image.url}}" class="pull-left thumbnail" /></a></div>
+			<div ng-if="fields.objectId">
+				<a ng-repeat="image in fields[field.column]" ng-href="{{image.url}}" class="pull-left thumbnail_container" target="_blank">
+					<img ng-src="{{image.thumbnail_url || image.url}}" class="thumbnail" />
+					<span ng-click="removeFile(field.column, image)" class="btn_hover_delete"></span>	
+				</a>
+			</div>
 			<input ng-if="!fields.objectId" app-filereader type="file" multiple accept="image/*" ng-model="fields[field.column]"     ng-required="field.required" name="{{field.column}}" class="form-control" />
 			<input ng-if="fields.objectId"  app-filereader type="file" multiple accept="image/*" ng-model="files_edit[field.column]" ng-required="field.required && !fields[field.column]" name="{{field.column}}" class="form-control" />
 		</div>
@@ -18,10 +23,5 @@
 	</div>
 	
 </div>
-<code>{{fields}}</code>
-
-<hr />
-<code>{{fields.dob}}</code>
-
-<hr />
-<code>{{files_edit}}</code>
+<!--<code>{{fields}}</code>
+<code>{{files_edit}}</code>-->

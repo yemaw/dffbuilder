@@ -63,10 +63,22 @@ a{cursor:pointer;}
 #dobjects form .row{
 	margin-bottom:10px;
 }
-#dobjects .row .thumbnail{
+#dobjects .row .thumbnail_container{
 	margin:5px;
+	float:left;
+	position:relative;
+}
+#dobjects .row .thumbnail{
 	max-width:128px;
 	max-height:128px;
+	float:left;position:relative;
+}
+#dobjects .thumbnail_container .btn_hover_delete {
+	display:none;position:absolute;top:-3px;right:-3px;width:43px;height:43px;text-indent:-999px;
+	background:transparent url('img/close_cross.png') no-repeat 0px 0px;
+}
+#dobjects .thumbnail_container:hover .btn_hover_delete {
+	display:block; 
 }
 
 #dobjects .command-bar .btn{
@@ -80,9 +92,9 @@ a{cursor:pointer;}
 /*.paper{
 	padding:20px;box-shadow:1px 1px 5px #c0c0c0;border-radius:2px;background:#ffffff;
 }*/
-
-
-
+.clickable{
+	cursor:pointer;
+}
 .center{
 	text-align:center;
 }

@@ -1,55 +1,193 @@
-var forms = {
-	"resumes":{
-			"name":"Samples",
-			"form_fields":[
-			{
-				"column":"name",
-				"label":"Name",
-				"type":"textbox",
-				"show_in_index":true,
-				"required":true,
+var forms = [
+{
+	"name":"Bookmarks",
+	"collection":"bookmarks",
+	"form_fields":[
+		{
+			"column":"title",
+			"label":"Title",
+			"type":"textbox",
+			"show_in_index":true,
+		},
+		{
+			"column":"link",
+			"label":"Link",
+			"type":"textbox",
+			"show_in_index":true,
+		},
+		{
+			"column":"category",
+			"label":"Category",
+			"type":"radio",
+			"options":["Standalone","JQuery","AngularJS","ReactJS", "Tool","Webased Tool"],
+			"show_in_index":true,
+		},
+		{
+			"column":"note",
+			"label":"Additional notes",
+			"type":"textbox",
+		},
+		{
+			"column":"note_photos",
+			"label":"Image",
+			"type":"images",
+			
+		},
+		{
+			"column":"date",
+			"label":"Date",
+			"type":"date",
+		}
+	]			
+},	
+{
+	"name":"Resumes",
+	"collection":"resumes",
+	"form_fields":[
+		{
+			"column":"name",
+			"label":"Name",
+			"type":"textbox",
+			"show_in_index":true,
+			"required":true,
+		},
+		{
+			"column":"cover_photos",
+			"label":"Photo",
+			"type":"images",
+			
+		},
+		{
+			"column":"father_name",
+			"label":"Father Name",
+			"type":"textbox",
+			"rules":{
+				"min":"2",
+				"max":"20"
 			},
-			{
-				"column":"cover_photos",
-				"label":"Photo",
-				"type":"images",
-				
+			"show_in_index":true,
+			"required":true,
+		},
+		{
+			"column":"mother_name",
+			"label":"Mother Name",
+			"type":"textbox",
+			"rules":{
+				"min":"2",
+				"max":"20"
 			},
-			{
-				"column":"father_name",
-				"label":"Father Name",
-				"type":"textbox",
-				"rules":{
-					"min":"2",
-					"max":"20"
-				},
-				"show_in_index":true,
-				"required":true,
+			"show_in_index":true,
+		},
+		{
+			"column":"gender",
+			"label":"Gender",
+			"type":"radio",
+			"options":["Male","Female"],
+			"show_in_index":true,
+			"required":true,
+		},
+		{
+			"column":"dob",
+			"label":"Date of Birth",
+			"type":"date",
+			"required":true,
+		}
+	]			
+},
+{
+	"name":"Others",
+	"collection":"others",
+	"form_fields":[
+		{
+			"column":"name",
+			"label":"Name",
+			"type":"textbox",
+			"show_in_index":true,
+			"required":true,
+		},
+		{
+			"column":"cover_photos",
+			"label":"Photo",
+			"type":"images",
+			
+		},
+		{
+			"column":"footer_photos",
+			"label":"Footer Photo",
+			"type":"images",
+			
+		},
+		{
+			"column":"father_name",
+			"label":"Father Name",
+			"type":"textbox",
+			"rules":{
+				"min":"2",
+				"max":"20"
 			},
-			{
-				"column":"mother_name",
-				"label":"Mother Name",
-				"type":"textbox",
-				"rules":{
-					"min":"2",
-					"max":"20"
-				},
-				"show_in_index":true,
+			"show_in_index":true,
+			"required":true,
+		},
+		{
+			"column":"mother_name",
+			"label":"Mother Name",
+			"type":"textbox",
+			"rules":{
+				"min":"2",
+				"max":"20"
 			},
-			{
-				"column":"gender",
-				"label":"Gender",
-				"type":"radio",
-				"options":["Male","Female"],
-				"show_in_index":true,
-				"required":true,
-			},
-			{
-				"column":"dob",
-				"label":"Date of Birth",
-				"type":"date",
-				"required":true,
-			}
-		]			
-	}
-}	
+			"show_in_index":true,
+		},
+		{
+			"column":"gender",
+			"label":"Gender",
+			"type":"radio",
+			"options":["Male","Female"],
+			"show_in_index":true,
+			"required":true,
+		},
+		{
+			"column":"dob",
+			"label":"Date of Birth",
+			"type":"date",
+			"required":true,
+		}
+	]			
+},
+{
+	"name":"HTML, CSS and Javascript",
+	"collection":"html_css_js",
+	"form_fields":[
+		{
+			"column":"title",
+			"label":"Title",
+			"type":"textbox",
+			"show_in_index":true,
+		},
+		{
+			"column":"link",
+			"label":"Link",
+			"type":"textbox",
+			"show_in_index":true,
+		}
+	]
+},
+{
+	"name":"PHP",
+	"collection":"php",
+	"form_fields":[
+		{
+			"column":"title",
+			"label":"Title",
+			"type":"textbox",
+			"show_in_index":true,
+		},
+		{
+			"column":"link",
+			"label":"Link",
+			"type":"textbox",
+			"show_in_index":true,
+		}
+	]
+}
+]	

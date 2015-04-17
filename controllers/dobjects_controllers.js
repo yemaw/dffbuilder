@@ -1,11 +1,9 @@
-App.controller('DObjectsRootController',['$location', '$routeParams','$scope', 'ParseDataService', 
-function($location, $routeParams, $scope, PD){
+App.controller('DObjectsRootController',['$location', '$routeParams','$scope','$rootScope', 'ParseDataService', 'FormsStructureService',
+function($location, $routeParams, $scope, $rootScope, PD, FSS){
 	
 	if(!Parse.User.current()){
-		$location.url('login');
-		if(!$scope.$$phase) {
-			$scope.$apply();  
-		}
+		$rootScope.safeApply($location.url('login'));
+		$rootScope.$broadcast('Page_ShowToaster',{type:'warning',body:'Please login first to access this page.',timeout:3000});
 		return;
 	}
 	
@@ -13,16 +11,7 @@ function($location, $routeParams, $scope, PD){
 	
 	$scope.username = Parse.User.current().get('username');
 	
-	$scope.forms = [{
-		name:'Resumes',
-		collection:'resumes'
-	},{
-		name:'Blah',
-		collection:'blah'
-	},{
-		name:'Others',
-		collection:'others'
-	}];
+	$scope.forms = FSS.getForms();
 	
 	$scope.getActionTemplateUrl = function(){
 		var path;
@@ -39,7 +28,8 @@ function($location, $routeParams, $scope, PD){
 	
 	$scope.logout = function(){
 		Parse.User.logOut();
-		$scope.$apply($location.url('login'));
+		$rootScope.safeApply($location.url('login'));
+		$rootScope.$broadcast('Page_ShowToaster',{type:'success',body:'Successfully logout.'});
 	}
 	
 }]);
@@ -48,7 +38,7 @@ App.controller('DObjectsIndexController',
 ['$routeParams', '$scope', 'ParseDataService', 'flash','FormsStructureService',
 function($routeParams, $scope, PD, flash, FSS){
 	
-	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
+	document.title = FSS.getFormName($routeParams.collection);
 	
 	$scope.filters = {};
 	
@@ -77,10 +67,10 @@ function($routeParams, $scope, PD, flash, FSS){
 
 
 App.controller('DObjectsCreateController', 
-['$routeParams', '$location', '$scope', 'ParseDataService', 'flash','FormsStructureService',
-function($routeParams, $location, $scope, PD, flash, FSS){
+['$routeParams', '$location', '$scope','$rootScope', 'ParseDataService', 'flash','FormsStructureService',
+function($routeParams, $location, $scope, $rootScope, PD, flash, FSS){
 	
-	document.title = 'Create';
+	document.title = 'Create in '+FSS.getFormName($routeParams.collection);
 	
 	$scope.collection = $routeParams.collection;
 	
@@ -89,7 +79,7 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 	$scope.form_fields = FSS.getFormFields($scope.collection);
 	
 	$scope.saveObject = function(){
-		
+		$rootScope.$broadcast('Page_BlockUI');
 		async.eachSeries($scope.form_fields,function(form_field,callback){
 			var _field = form_field.column;
 			var field = $scope.fields[_field];
@@ -125,8 +115,7 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 					});
 				},function(error){
 					if(error){
-						alert('a file upload error');
-						console.log(error);
+						$rootScope.$broadcast('Page_ShowToaster',{type:'error',title:'File upload errror.', body:error});
 					}
 					$scope.fields[_field] = _files;
 					callback(null);
@@ -135,18 +124,21 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 				callback(null);
 			}
 		},function(error){
+			
 			if(error){
-				alert('files upload error');
-				console.log(error);
+				$rootScope.$broadcast('Page_ShowToaster',{type:'error',title:'Data processing errror.', body:error});
 			}
 			//$scope.fields's file field are updated with parse file object's data. now ready to save to parse
 			PD.saveObject($scope.fields, $scope.collection, {
 				onSuccess:function(obj){
 					obj = Helper.ParseToJSON(obj, $scope.form_fields);
-					Helper.SafeScopeApply($scope, $location.url($scope.collection+'/show/'+obj.objectId));
+					$rootScope.safeApply($location.url($scope.collection+'/show/'+obj.objectId));
+					$rootScope.$broadcast('Page_ShowToaster',{type:'success',body:'Successfuly created'});
+					$rootScope.$broadcast('Page_UnBlockUI');
 				},
-				onError:function(){
-					alert('error');
+				onError:function(error){
+					$rootScope.$broadcast('Page_ShowToaster',{type:'error',title:'Object saving errror.', body:error});
+					$rootScope.$broadcast('Page_UnBlockUI');
 				}
 			});
 		});
@@ -155,10 +147,10 @@ function($routeParams, $location, $scope, PD, flash, FSS){
 }]);
 
 App.controller('DObjectsEditController',
-['$routeParams','$location', '$window', '$scope', 'ParseDataService', 'flash', 'FormsStructureService',
-function($routeParams, $location, $window, $scope, PD, flash, FSS){
+['$routeParams','$location', '$window', '$scope', '$rootScope', 'ParseDataService', 'flash', 'FormsStructureService',
+function($routeParams, $location, $window, $scope, $rootScope, PD, flash, FSS){
 	
-	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
+	document.title = 'Edit a '+FSS.getFormName($routeParams.collection);
 	
 	$scope.collection = $routeParams.collection;
 	
@@ -177,18 +169,34 @@ function($routeParams, $location, $window, $scope, PD, flash, FSS){
 			console.log(error);
 		}
 	});
-	
+	$scope.removeFile = function(field, file){
+		
+		for(var index in $scope.fields[field]){
+			var obj = $scope.fields[field][index];
+			if(file.FileId === obj.FileId){
+				$scope.fields[field].splice(index, 1);
+			}
+		}
+		
+	}
 	$scope.saveObject = function(){
+		$rootScope.$broadcast('Page_BlockUI');
+		
+		var scope_fields = angular.toJson($scope.fields); //$hashKey issue
+		scope_fields = JSON.parse(scope_fields);
+		var scope_files_edit = angular.toJson($scope.files_edit);
+		scope_files_edit = JSON.parse(scope_files_edit);
+		
 		async.eachSeries($scope.form_fields,function(form_field,callback){
 			var _field = form_field.column;
-			var field = $scope.fields[_field];
+			var field = scope_files_edit[_field] || scope_fields[_field];
 			if(!field){
 				callback(null);
 				return;
 			}
 			
-			if( ['image','images','file','files'].indexOf(form_field.type) >= 100 && $scope.files_edit[_field] ){//is file field ?
-				var _files = []; console.log('aeiou');
+			if( ['image','images','file','files'].indexOf(form_field.type) >= 0 && $scope.files_edit[_field] ){//is file field ?
+				var _files = []; 
 				async.each($scope.files_edit[_field], function(file, callback){//loop and upload all new files.notice, data is taken from different field `files_edit`
 					var name = file.name || 'image.jpg';//
 					
@@ -205,52 +213,53 @@ function($routeParams, $location, $window, $scope, PD, flash, FSS){
 					});
 				},function(error){
 					if(error){
-						alert('a file upload error');
-						console.log(error);
+						$rootScope.$broadcast('Page_ShowToaster',{type:'error',title:'File upload errror.', body:error});
 					}
 					
+					scope_fields[_field] = scope_fields[_field] || [];//#really need?
+					scope_fields[_field] = scope_fields[_field].concat(_files);
 					
-					$scope.fields[_field] = $scope.fields[_field] || [];//#really need?
-					$scope.fields[_field] = $scope.fields[_field].concat(_files);
-					//console.log($scope.fields[_field]);
 					callback(null);
 				});	
 			} else if( form_field.type === 'date' ){// && (typeof $scope.fields[_field] === 'string')
-				$scope.fields[_field] = new Date($scope.fields[_field]);
+				scope_fields[_field] = new Date(scope_fields[_field]);
 				callback(null);
 			} else {
 				callback(null);
 			}
 		},function(error){
-			if(error){
-				alert('files upload error');
-				console.log(error);
-			}
-			$scope.fields = angular.toJson($scope.fields);
 			
-			//$scope.fields's file field are updated with parse file object's data. now ready to save to parse
-			PD.saveObject($scope.fields, $scope.collection, {
+			if(error){
+				$rootScope.$broadcast('Page_ShowToaster',{type:'error',title:'Data processing errror.', body:error});
+			}
+			
+			PD.updateObject(scope_fields, $scope.form_fields, $scope.collection, {
 				onSuccess:function(obj){
 					obj = Helper.ParseToJSON(obj, $scope.form_fields);
-					Helper.SafeScopeApply($scope, $location.url($scope.collection+'/show/'+obj.objectId));
+					$rootScope.safeApply($scope, $location.url($scope.collection+'/show/'+obj.objectId));
+					$rootScope.$broadcast('Page_ShowToaster',{type:'success',body:'Successfuly saved.'});
+					$rootScope.$broadcast('Page_UnBlockUI');
 				},
 				onError:function(error){
-					console.log(error);
-					alert('error');
+					$rootScope.$broadcast('Page_ShowToaster',{type:'error',title:'Error saving', body:error});
+					$rootScope.$broadcast('Page_UnBlockUI');
 				}
 			});
 		});
 	}
 	
 	$scope.deleteObject = function(){
+		$rootScope.$broadcast('Page_BlockUI');
 		if($window.confirm('Are you sure you want to delete?')){
 			PD.deleteObject($scope.fields.objectId,$scope.collection,{
 				onSuccess:function(obj){
-					Helper.SafeScopeApply($scope, $location.url($scope.collection));
+					$rootScope.safeApply($scope, $location.url($scope.collection));
+					$rootScope.$broadcast('Page_ShowToaster',{type:'success',body:'Successfully deleted.'});
+					$rootScope.$broadcast('Page_UnBlockUI');
 				},
 				onError:function(error){
-					console.log(error);
-					alert('error');
+					$rootScope.$broadcast('Page_ShowToaster',{type:'error',title:'Error deleting object.', body:error});
+					$rootScope.$broadcast('Page_UnBlockUI');
 				}
 			});	
 		}
@@ -262,7 +271,7 @@ App.controller('DObjectsShowController',
 ['$routeParams', '$scope', 'ParseDataService', 'flash', 'FormsStructureService',
 function($routeParams, $scope, PD, flash, FSS){
 	
-	document.title = Helper.CapitalizeFirstLetter($routeParams.collection);
+	document.title = FSS.getFormName($routeParams.collection);
 	
 	$scope.collection = $routeParams.collection;
 	
@@ -286,17 +295,35 @@ function($routeParams, $scope, PD, flash, FSS){
 App.controller('DObjectsSettingsController',
 ['$scope','FormsStructureService',
 function($scope, FSS){
-	$scope.forms_fields = {};
-	$scope.forms_fields['resumes'] = FSS.getFormFields('resumes');//#tmp get list of forms
-	
+	document.title = 'Forms Settings';
+	$scope.forms = FSS.getForms();
 }]);
 
 
 App.service('FormsStructureService',[function(){
-	this.getFormFields = function(form_name){
-		return forms[form_name].form_fields;
-	}
 	
+	return {
+		_forms : forms,
+		getForms:function(){
+			return this._forms;
+		},
+		getForm:function(collection){
+			for(var index in this._forms){
+				if(this._forms[index].collection && this._forms[index].collection === collection){
+					return this._forms[index];		
+				}
+			}
+		},
+		getFormName:function(collection){
+			return this.getForm(collection).name;
+		},
+		getFormFields:function(collection){
+			return this.getForm(collection).form_fields;
+		},
+		getDefaultCollection : function(){
+			return 'bookmarks';
+		}
+	}
 	
 }]);
 

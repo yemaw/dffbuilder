@@ -6,9 +6,6 @@
 			<td>
 			<div class="pull-right" style="margin-right:50px;">
 				<form id="login-box" ng-submit="login()">
-					<div ng-show="flash_messages.length">
-						<div ng-repeat="msg in flash_messages" class="alert alert-{{msg.type}}">{{msg.message}}</div>
-					</div>
 					<input type="text" id="user_id" ng-disabled="logging_in" ng-model="user_id" required class="form-control" placeholder="Username" />
 					<br />
 					<input type="password" id="password" ng-disabled="logging_in" ng-model="password" required class="form-control" placeholder="Password" />

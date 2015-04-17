@@ -1,3 +1,10 @@
 <div ng-controller="DObjectsSettingsController">
-	<code>{{forms_fields}}</code>
+	<div ng-repeat="form in forms">
+		<h3 style="display:inline-block;">{{form.name}}</h3> &nbsp; <code style="display:inline-block;">{{form.collection}}</code>
+		<fieldset>
+		Form Fields
+		<pre>{{form.form_fields | json}}</pre>
+		</fieldset>
+		<hr />
+	</div>
 </div>
