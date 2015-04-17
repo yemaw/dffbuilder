@@ -1,5 +1,5 @@
 {
-  "name": "dffbuilder",
+  "name": "parse-forms",
   "version": "0.0.0",
   "description": "",
   "main": "app.js",
@@ -8,11 +8,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yemaw/dffbuilder.git"
+    "url": "https://github.com/yemaw/parse-forms.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/yemaw/dffbuilder/issues"
+    "url": "https://github.com/yemaw/parse-forms/issues"
   }
 }
